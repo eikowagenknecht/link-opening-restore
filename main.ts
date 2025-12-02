@@ -24,7 +24,6 @@ export default class LinkOpeningRestore extends Plugin {
 				leaf.view.getViewType() === "markdown" &&
 				!this.#registeredLeafs.has(leaf)
 			) {
-				// console.log('[debug] #recheckAllLeafs new leaf', leaf);
 				this.#registeredLeafs.add(leaf);
 				const editorEl =
 					leaf.view.containerEl.querySelector(".cm-content");
@@ -36,7 +35,6 @@ export default class LinkOpeningRestore extends Plugin {
 
 				const originalUnload = leaf.view.onunload;
 				leaf.view.onunload = () => {
-					// console.log('debug unload leaf', leaf);
 					this.#registeredLeafs.delete(leaf);
 					this.#removeListenerFromElement(editorEl);
 					originalUnload();
@@ -48,7 +46,6 @@ export default class LinkOpeningRestore extends Plugin {
 
 	#clickEventHandler = (event: MouseEvent) => {
 		const target = event.target as HTMLElement;
-		// console.log('[debug] #clickEventHandler target', target);
 		if (
 			target.tagName !== "A" &&
 			!target.classList.contains("cm-hmd-internal-link") &&
@@ -76,7 +73,6 @@ export default class LinkOpeningRestore extends Plugin {
 
 		// Ctrl + Alt + Shift + Click: Open in new window
 		if (event.altKey && event.shiftKey && modifierKeyPressed) {
-			// console.log('[debug] #clickEventHandler open in new window', linkText);
 			if (file) {
 				this.app.workspace.openPopoutLeaf().openFile(file);
 			}
@@ -87,7 +83,6 @@ export default class LinkOpeningRestore extends Plugin {
 
 		// Ctrl + Shift + Click: Open in new tab
 		if (event.shiftKey && modifierKeyPressed && !event.altKey) {
-			// console.log('[debug] #clickEventHandler open in new tab', linkText);
 			if (file) {
 				this.app.workspace.getLeaf('tab').openFile(file);
 			}
@@ -98,7 +93,6 @@ export default class LinkOpeningRestore extends Plugin {
 
 		// Ctrl + Click: Open in same tab
 		if (modifierKeyPressed && !event.shiftKey && !event.altKey) {
-			// console.log('[debug] #clickEventHandler open in same tab', linkText);
 			if (file) {
 				this.app.workspace.getLeaf(false).openFile(file);
 			}
