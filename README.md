@@ -65,9 +65,9 @@ npm run build
 1. Update version in `package.json`
 2. Run `npm run version` to automatically update `manifest.json` and `versions.json`
 3. Commit changes
-4. Create and push a git tag:
+4. Create and push a git tag (without 'v' prefix - required by Obsidian):
    ```bash
-   git tag v2.0.1
+   git tag 2.0.2
    git push --tags
    ```
 5. GitHub Actions will automatically create a draft release
