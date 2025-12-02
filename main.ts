@@ -78,8 +78,7 @@ export default class CtrlClickLinksPlugin extends Plugin {
 			if (file) {
 				this.app.workspace.openPopoutLeaf().openFile(file);
 			}
-			event.preventDefault();
-			event.stopPropagation();
+			this.#preventEvent(event);
 			return;
 		}
 
@@ -88,8 +87,7 @@ export default class CtrlClickLinksPlugin extends Plugin {
 			if (file) {
 				this.app.workspace.getLeaf('tab').openFile(file);
 			}
-			event.preventDefault();
-			event.stopPropagation();
+			this.#preventEvent(event);
 			return;
 		}
 
@@ -98,14 +96,12 @@ export default class CtrlClickLinksPlugin extends Plugin {
 			if (file) {
 				this.app.workspace.getLeaf(false).openFile(file);
 			}
-			event.preventDefault();
-			event.stopPropagation();
+			this.#preventEvent(event);
 			return;
 		}
 
 		// Click without modifiers: Prevent default (allow edit mode)
-		event.preventDefault();
-		event.stopPropagation();
+		this.#preventEvent(event);
 	};
 
 	#addListenerToElement(element: Element) {
@@ -118,5 +114,10 @@ export default class CtrlClickLinksPlugin extends Plugin {
 		element.removeEventListener("click", this.#clickEventHandler, {
 			capture: true,
 		});
+	}
+
+	#preventEvent(event: MouseEvent) {
+		event.preventDefault();
+		event.stopPropagation();
 	}
 }
