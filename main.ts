@@ -1,6 +1,10 @@
 import { Platform, Plugin, WorkspaceLeaf } from "obsidian";
 
 export default class CtrlClickLinksPlugin extends Plugin {
+	private static readonly MARKDOWN_VIEW = "markdown";
+	private static readonly EDITOR_SELECTOR = ".cm-content";
+	private static readonly LINK_CLASSES = ["cm-hmd-internal-link", "cm-link", "cm-url"];
+
 	#registeredLeafs = new Set<WorkspaceLeaf>();
 	#isMac = Platform.isMacOS;
 
@@ -13,7 +17,7 @@ export default class CtrlClickLinksPlugin extends Plugin {
 
 	override onunload() {
 		this.#registeredLeafs.forEach((v) => {
-			const editorEl = v.view.containerEl.querySelector(".cm-content")!;
+			const editorEl = v.view.containerEl.querySelector(CtrlClickLinksPlugin.EDITOR_SELECTOR)!;
 			this.#removeListenerFromElement(editorEl);
 		});
 	}
@@ -21,12 +25,12 @@ export default class CtrlClickLinksPlugin extends Plugin {
 	#recheckAllLeafs() {
 		this.app.workspace.iterateAllLeaves((leaf) => {
 			if (
-				leaf.view.getViewType() === "markdown" &&
+				leaf.view.getViewType() === CtrlClickLinksPlugin.MARKDOWN_VIEW &&
 				!this.#registeredLeafs.has(leaf)
 			) {
 				this.#registeredLeafs.add(leaf);
 				const editorEl =
-					leaf.view.containerEl.querySelector(".cm-content");
+					leaf.view.containerEl.querySelector(CtrlClickLinksPlugin.EDITOR_SELECTOR);
 				// In some cases, this will be null.
 				// —— I couldn't reproduce this issue in my environment, Let's leave it at that for now.
 				if (!editorEl) return;
@@ -46,12 +50,10 @@ export default class CtrlClickLinksPlugin extends Plugin {
 
 	#clickEventHandler = (event: MouseEvent) => {
 		const target = event.target as HTMLElement;
-		if (
-			target.tagName !== "A" &&
-			!target.classList.contains("cm-hmd-internal-link") &&
-			!target.classList.contains("cm-link") &&
-			!target.classList.contains("cm-url")
-		) {
+		const isLink = target.tagName === "A" ||
+			CtrlClickLinksPlugin.LINK_CLASSES.some(cls => target.classList.contains(cls));
+
+		if (!isLink) {
 			return;
 		}
 
