@@ -62,11 +62,8 @@ export default class CtrlClickLinksPlugin extends Plugin {
 		// Handle macOS (Command key) and other platforms (Ctrl key)
 		const modifierKeyPressed = this.#isMac ? event.metaKey : event.ctrlKey;
 
-		// Check if this is an external link (has href attribute)
-		const isExternalLink = target.tagName === "A" && (target as HTMLAnchorElement).href;
-
 		// For external links with modifier key, allow default browser behavior
-		if (isExternalLink && modifierKeyPressed) {
+		if (target instanceof HTMLAnchorElement && target.href && modifierKeyPressed) {
 			// Let the browser handle external links with Ctrl+Click
 			return;
 		}
