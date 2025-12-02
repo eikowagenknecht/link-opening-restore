@@ -55,7 +55,7 @@ npm run build
 3. Commit changes
 4. Create and push a git tag:
    ```bash
-   git tag 1.2.2
+   git tag v2.0.1
    git push --tags
    ```
 5. GitHub Actions will automatically create a draft release
