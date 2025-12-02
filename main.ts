@@ -17,8 +17,10 @@ export default class CtrlClickLinksPlugin extends Plugin {
 
 	override onunload() {
 		this.#registeredLeafs.forEach((v) => {
-			const editorEl = v.view.containerEl.querySelector(CtrlClickLinksPlugin.EDITOR_SELECTOR)!;
-			this.#removeListenerFromElement(editorEl);
+			const editorEl = v.view.containerEl.querySelector(CtrlClickLinksPlugin.EDITOR_SELECTOR);
+			if (editorEl) {
+				this.#removeListenerFromElement(editorEl);
+			}
 		});
 	}
 
